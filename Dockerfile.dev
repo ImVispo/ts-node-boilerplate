@@ -1,0 +1,20 @@
+FROM node:16.13-alpine3.15
+
+RUN apk --no-cache add --virtual .builds-deps build-base python3
+
+RUN apk add --update git
+
+WORKDIR /usr/app/template
+
+ENV NODE_ENV=development
+
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+COPY ./package.json .
+
+RUN yarn install
+
+COPY . .
+
+CMD ["yarn", "dev"]
